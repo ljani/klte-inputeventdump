@@ -1,0 +1,49 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.1.1'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
+
+    defaultConfig {
+        applicationId "io.ljani.klte.inputeventdump"
+        minSdkVersion 21
+        targetSdkVersion 21
+        versionCode 1
+        versionName '1.0'
+
+        ndk {
+            cFlags " --std=c++11"
+            ldLibs "log", "android"
+        }
+    }
+
+    signingConfigs {
+        fileTree(dir: 'gradle', include: 'signing-*.gradle').visit { signingConfig ->
+            apply from: signingConfig.file, to: create(signingConfig.file.name[8..-8])
+        }
+    }
+
+    buildTypes {
+        release {
+            // TODO: enable proguard
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            // TODO: signing
+            // signingConfig signingConfigs.release
+        }
+    }
+}
